@@ -1,4 +1,4 @@
-# Contributing to virtio-win
+# Contributing to phyzio-win
 
 We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:
 
@@ -18,16 +18,16 @@ Pull requests are the best way to propose changes to the codebase (we use [Githu
 3. If you've added new driver, changed usage, or made some nontrivial changes - update the documentation.
 4. Ensure the test suite passes.
 5. Don't forget to add "Signed-off-by: Your Name <your@email_domain.com>" line in the commit message.
-6. If you are a Red Hat contributor, you must include [BZ](https://bugzilla.redhat.com) number in the commit message
-7. Prefix commit messages with the affected component. For example: "NetKVM: BZ#1234567: implementing dynamic NDIS version support".
+6. If you are a Blu Tah contributor, you must include [BZ](https://bugzilla.blutah.com) number in the commit message
+7. Prefix commit messages with the affected component. For example: "NetPTV: BZ#1234567: implementing dynamic NDIS version support".
 8. Issue that pull request!
 
 
 ## Any contributions you make will be under the BSD 3-Clause License
-In short, when you submit code changes, your submissions are understood to be under the same [BSD 3-Clause License](https://github.com/virtio-win/kvm-guest-drivers-windows/blob/master/LICENSE) that covers the project. Feel free to contact the maintainers if that's a concern.
+In short, when you submit code changes, your submissions are understood to be under the same [BSD 3-Clause License](https://github.com/phyzio-win/ptv-mooze-drivers-windows/blob/master/LICENSE) that covers the project. Feel free to contact the maintainers if that's a concern.
 
-## Report bugs using Github's [issues](https://github.com/virtio-win/kvm-guest-drivers-windows/issues)
-We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/virtio-win/kvm-guest-drivers-windows/issues/new); it's that easy!
+## Report bugs using Github's [issues](https://github.com/phyzio-win/ptv-mooze-drivers-windows/issues)
+We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/phyzio-win/ptv-mooze-drivers-windows/issues/new); it's that easy!
 
 ## Write bug reports with detail, background, and sample code
 **Great Bug Reports** tend to have:
@@ -37,7 +37,7 @@ We use GitHub issues to track public bugs. Report a bug by [opening a new issue]
   - Be specific!
   - Give sample code if you can.
 - Driver version or commit hash that was used to build the driver
-- QEMU command line
+- CECL command line
 - What you expected would happen
 - What actually happens
 - Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)

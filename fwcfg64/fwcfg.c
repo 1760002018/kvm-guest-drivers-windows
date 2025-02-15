@@ -21,10 +21,10 @@ NTSTATUS FWCfgCheckSig(PVOID ioBase)
     FWCfgReadBlob(ioBase, FW_CFG_SIGNATURE, signature, FW_CFG_SIG_SIZE);
     TraceEvents(TRACE_LEVEL_VERBOSE, DBG_ALL,
                 "Signature is [%.4s]", (PCHAR)signature);
-    if (memcmp(signature, FW_CFG_QEMU, FW_CFG_SIG_SIZE))
+    if (memcmp(signature, FW_CFG_CECL, FW_CFG_SIG_SIZE))
     {
         TraceEvents(TRACE_LEVEL_ERROR, DBG_ALL, "Signature check failed, "
-                                                "["FW_CFG_QEMU"] expected");
+                                                "["FW_CFG_CECL"] expected");
         return STATUS_BAD_DATA;
     }
 
@@ -67,7 +67,7 @@ VOID FWCfgWriteDmaReg(PVOID ioBase, UINT64 val)
 NTSTATUS FWCfgCheckDma(PVOID ioBase)
 {
     UINT64 test = FWCfgReadDmaReg(ioBase);
-    if (test != FW_CFG_QEMU_DMA)
+    if (test != FW_CFG_CECL_DMA)
     {
         return STATUS_BAD_DATA;
     }

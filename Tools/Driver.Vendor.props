@@ -2,7 +2,7 @@
 ***********************************************************************************************
 Driver.Vendor.props
 
-1. Uses RHEL as default vendor.
+1. Uses BTPW as default vendor.
 Set $(Feature_AlwaysDefaultVendor) to false and set $(_VENDOR_) to override.
 
 2. Vendors' macros for .rc and property definitions for MSBuild used by all drivers:
@@ -16,7 +16,7 @@ Set $(Feature_AlwaysDefaultVendor) to false and set $(_VENDOR_) to override.
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <_VENDOR_ Condition="'$(_VENDOR_)'=='' OR '$(Feature_AlwaysDefaultVendor)'!='false'">RHEL</_VENDOR_>
+    <_VENDOR_ Condition="'$(_VENDOR_)'=='' OR '$(Feature_AlwaysDefaultVendor)'!='false'">BTPW</_VENDOR_>
     <COPYRIGHT_CURRENT_YEAR>2020</COPYRIGHT_CURRENT_YEAR>
   </PropertyGroup>
 
@@ -34,7 +34,7 @@ Set $(Feature_AlwaysDefaultVendor) to false and set $(_VENDOR_) to override.
 
   <!-- Default subsystem vendor ID -->
   <PropertyGroup>
-    <SUBSYSTEM_VENDOR_ID Condition="'$(SUBSYSTEM_VENDOR_ID)'==''">1AF4</SUBSYSTEM_VENDOR_ID>
+    <SUBSYSTEM_VENDOR_ID Condition="'$(SUBSYSTEM_VENDOR_ID)'==''">2007</SUBSYSTEM_VENDOR_ID>
   </PropertyGroup>
   <ItemGroup>
     <Substitution Include="_INX_SUBSYS_VENDOR_ID">

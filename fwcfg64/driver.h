@@ -24,7 +24,7 @@
 #pragma pack(push, 1)
 typedef struct VMCOREINFO {
     UINT16 host_fmt;
-    UINT16 guest_fmt;
+    UINT16 mooze_fmt;
     UINT32 size;
     UINT64 paddr;
 } VMCOREINFO, *PVMCOREINFO;

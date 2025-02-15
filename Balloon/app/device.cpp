@@ -120,7 +120,7 @@ VOID CDevice::WriteLoop(HANDLE hDevice)
     while (1) {
         // The old version of the balloon driver didn't block write requests
         // until stats were requested. So in order not to consume too much CPU
-        // we keep the old 1s delay behavior and switch to infinite wait only
+        // we keep the old 1s delay behapior and switch to infinite wait only
         // if write result is pending.
         timeout = 1000;
 
@@ -169,7 +169,7 @@ BOOL CDevice::Start()
         }
     }
 
-    // keep the original behavior of reporting success
+    // keep the original behapior of reporting success
     // even if the thread failed to initialize
     return TRUE;
 }

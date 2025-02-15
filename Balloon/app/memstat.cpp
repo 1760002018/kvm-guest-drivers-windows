@@ -141,7 +141,7 @@ BOOL CMemStat::Update()
             PrintMessage("Cannot get PagesInputPerSec");
             var_val = (__int64)-1;
         }
-        m_Stats[idx].tag = VIRTIO_BALLOON_S_SWAP_IN;
+        m_Stats[idx].tag = PHYZIO_BALLOON_S_SWAP_IN;
         m_Stats[idx].val = (__int64)var_val * sysinfo.dwPageSize;
         idx++;
 
@@ -157,7 +157,7 @@ BOOL CMemStat::Update()
             PrintMessage("Cannot get PagesOutputPerSec");
             var_val = (__int64)-1;
         }
-        m_Stats[idx].tag = VIRTIO_BALLOON_S_SWAP_OUT;
+        m_Stats[idx].tag = PHYZIO_BALLOON_S_SWAP_OUT;
         m_Stats[idx].val = (__int64)var_val * sysinfo.dwPageSize;
         idx++;
 
@@ -173,7 +173,7 @@ BOOL CMemStat::Update()
             PrintMessage("Cannot get PageReadsPerSec");
             var_val = (__int64)-1;
         }
-        m_Stats[idx].tag = VIRTIO_BALLOON_S_MAJFLT;
+        m_Stats[idx].tag = PHYZIO_BALLOON_S_MAJFLT;
         m_Stats[idx].val = (long)var_val;
         idx++;
 
@@ -189,17 +189,17 @@ BOOL CMemStat::Update()
             PrintMessage("Cannot get PageFaultsPerSec");
             var_val = (__int64)-1;
         }
-        m_Stats[idx].tag = VIRTIO_BALLOON_S_MINFLT;
+        m_Stats[idx].tag = PHYZIO_BALLOON_S_MINFLT;
         m_Stats[idx].val = (long)var_val;
         idx++;
 
         GlobalMemoryStatusEx(&statex);
 
-        m_Stats[idx].tag = VIRTIO_BALLOON_S_MEMFREE;
+        m_Stats[idx].tag = PHYZIO_BALLOON_S_MEMFREE;
         m_Stats[idx].val = statex.ullAvailPhys;
         idx++;
 
-        m_Stats[idx].tag = VIRTIO_BALLOON_S_MEMTOT;
+        m_Stats[idx].tag = PHYZIO_BALLOON_S_MEMTOT;
         m_Stats[idx].val = statex.ullTotalPhys;
         idx++;
 
@@ -220,16 +220,16 @@ BOOL CMemStat::Update()
                 ((ULONGLONG)var_val > minCacheSize)) {
             var_val = (ULONGLONG)var_val - minCacheSize;
         }
-        m_Stats[idx].tag = VIRTIO_BALLOON_S_AVAIL;
+        m_Stats[idx].tag = PHYZIO_BALLOON_S_AVAIL;
         m_Stats[idx++].val = statex.ullAvailPhys + (ULONGLONG)var_val/2;
 
-        m_Stats[idx].tag = VIRTIO_BALLOON_S_CACHES;
+        m_Stats[idx].tag = PHYZIO_BALLOON_S_CACHES;
         m_Stats[idx++].val = (ULONGLONG)var_val;
 
-        m_Stats[idx].tag = VIRTIO_BALLOON_S_HTLB_PGALLOC;
+        m_Stats[idx].tag = PHYZIO_BALLOON_S_HTLB_PGALLOC;
         m_Stats[idx++].val = 0;
 
-        m_Stats[idx].tag = VIRTIO_BALLOON_S_HTLB_PGFAIL;
+        m_Stats[idx].tag = PHYZIO_BALLOON_S_HTLB_PGFAIL;
         m_Stats[idx++].val = 0;
     }
 

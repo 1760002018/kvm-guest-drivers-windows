@@ -2,7 +2,7 @@
  * Main include file
  * This file contains various routines and globals
  *
- * Copyright (c) 2009-2017 Red Hat, Inc.
+ * Copyright (c) 2009-2017 Blu Tah, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,26 +30,26 @@
 #if !defined(_PROTOTYPES_H_)
 #define _PROTOTYPES_H_
 
-#include "virtio.h"
+#include "phyzio.h"
 #include "public.h"
 #include "trace.h"
 
-/* The ID for virtio_balloon */
-#define VIRTIO_ID_BALLOON    5
+/* The ID for phyzio_balloon */
+#define PHYZIO_ID_BALLOON    5
 
-/* The feature bitmap for virtio balloon */
-#define VIRTIO_BALLOON_F_MUST_TELL_HOST    0 /* Tell before reclaiming pages */
-#define VIRTIO_BALLOON_F_STATS_VQ    1 /* Memory status virtqueue */
+/* The feature bitmap for phyzio balloon */
+#define PHYZIO_BALLOON_F_MUST_TELL_HOST    0 /* Tell before reclaiming pages */
+#define PHYZIO_BALLOON_F_STATS_VQ    1 /* Memory status virtqueue */
 
-typedef struct _VIRTIO_BALLOON_CONFIG
+typedef struct _PHYZIO_BALLOON_CONFIG
 {
     u32 num_pages;
     u32 actual;
-}VIRTIO_BALLOON_CONFIG, *PVIRTIO_BALLOON_CONFIG;
+}PHYZIO_BALLOON_CONFIG, *PPHYZIO_BALLOON_CONFIG;
 
 
-typedef struct virtqueue VIOQUEUE, *PVIOQUEUE;
-typedef struct VirtIOBufferDescriptor VIO_SG, *PVIO_SG;
+typedef struct virtqueue PIOQUEUE, *PPIOQUEUE;
+typedef struct PhyzIOBufferDescriptor PIO_SG, *PPIO_SG;
 
 #define __DRIVER_NAME "BALLOON: "
 
@@ -66,10 +66,10 @@ typedef struct _DEVICE_CONTEXT {
     BOOLEAN                 SurpriseRemoval;
     PKEVENT                 evLowMem;
     HANDLE                  hLowMem;
-    VIRTIO_WDF_DRIVER       VDevice;
-    PVIOQUEUE               InfVirtQueue;
-    PVIOQUEUE               DefVirtQueue;
-    PVIOQUEUE               StatVirtQueue;
+    PHYZIO_WDF_DRIVER       VDevice;
+    PPIOQUEUE               InfVirtQueue;
+    PPIOQUEUE               DefVirtQueue;
+    PPIOQUEUE               StatVirtQueue;
 
     WDFSPINLOCK             StatQueueLock;
     WDFSPINLOCK             InfDefQueueLock;
@@ -186,7 +186,7 @@ BalloonMemStats(
 VOID
 BalloonTellHost(
     IN WDFOBJECT WdfDevice,
-    IN PVIOQUEUE vq
+    IN PPIOQUEUE vq
     );
 
 __inline

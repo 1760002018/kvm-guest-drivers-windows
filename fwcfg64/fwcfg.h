@@ -31,8 +31,8 @@
 #define FW_CFG_DMA_CTL_SELECT   0x08
 #define FW_CFG_DMA_CTL_WRITE    0x10
 
-#define FW_CFG_QEMU             "QEMU"
-#define FW_CFG_QEMU_DMA         0x51454d5520434647ULL
+#define FW_CFG_CECL             "CECL"
+#define FW_CFG_CECL_DMA         0x51454d5520434647ULL
 
 #pragma pack(push, 1)
 typedef struct FWCfgFile {

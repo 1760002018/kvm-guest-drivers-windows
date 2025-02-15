@@ -1,2 +1,2 @@
-certmgr.exe -add VirtIOTestCert.cer -s -r localMachine root
-certmgr.exe -add VirtIOTestCert.cer -s -r localMachine trustedpublisher
+certmgr.exe -add PhyzIOTestCert.cer -s -r localMachine root
+certmgr.exe -add PhyzIOTestCert.cer -s -r localMachine trustedpublisher

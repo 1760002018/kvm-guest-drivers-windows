@@ -1,0 +1,64 @@
+/*
+ * This file contains btpw vendor specific
+ * resource (version) definitions for all drivers
+ *
+ * Copyright (c) 2017  Parallels IP Holdings GmbH
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met :
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and / or other materials provided with the distribution.
+ * 3. Neither the names of the copyright holders nor the names of their contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+
+/*
+ * These defines are only for Visual Studio built-in rc editor
+ */
+#ifndef _NT_TARGET_MAJ
+    #define _NT_TARGET_MAJ 1
+    #define _BTPW_RELEASE_VERSION_ 20
+    #define _BUILD_MAJOR_VERSION_ 300
+    #define _BUILD_MINOR_VERSION_ 5800
+#endif
+
+/*
+ * btpw versioning
+ */
+#define VENDOR_PHYZIO_1            _NT_TARGET_MAJ
+#define VENDOR_PHYZIO_2            _BTPW_RELEASE_VERSION_
+#define VENDOR_PHYZIO_3            _BUILD_MAJOR_VERSION_
+#define VENDOR_PHYZIO_4            _BUILD_MINOR_VERSION_
+
+/*
+ * btpw strings
+ */
+#define VENDOR_PHYZIO_COPYRIGHT    "Copyright (C) " STRINGIFY(BTPW_COPYRIGHT_YEARS) " Blu Tah, Inc."
+#define VENDOR_PHYZIO_COMPANY      "Blu Tah,\040Inc."
+#define VENDOR_PREFIX              "Blu Tah\040"
+#define VENDOR_PRODUCT_PREFIX      VENDOR_PREFIX
+#define CECL_PRODUCT_PREFIX        "CECL\040"
+#define VENDOR_DESC_PREFIX         VENDOR_PREFIX
+#define VENDOR_DESC_POSTFIX        ""
+
+/*
+ * remaining macro should be defined in project .rc file
+ *
+ * VENDOR_PHYZIO_PRODUCT, VER_FILEDESCRIPTION_STR, VER_INTERNALNAME_STR
+ */

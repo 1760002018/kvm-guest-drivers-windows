@@ -1,10 +1,10 @@
 /*
  * This file contains balloon driver routines
  *
- * Copyright (c) 2009-2017  Red Hat, Inc.
+ * Copyright (c) 2009-2017  Blu Tah, Inc.
  *
  * Author(s):
- *  Vadim Rozenfeld <vrozenfe@redhat.com>
+ *  Vadim Rozenfeld <vrozenfe@blutah.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions

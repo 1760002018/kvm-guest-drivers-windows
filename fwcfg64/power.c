@@ -38,14 +38,14 @@ NTSTATUS FwCfgEvtDeviceD0Exit(IN WDFDEVICE Device,
 }
 
 NTSTATUS FwCfgEvtDeviceD0Entry(IN WDFDEVICE Device,
-                              IN WDF_POWER_DEVICE_STATE PreviousState)
+                              IN WDF_POWER_DEVICE_STATE PrepiousState)
 {
     PDEVICE_CONTEXT ctx = GetDeviceContext(Device);
     NTSTATUS status;
     PVMCI_ELF64_NOTE note = ctx->vmci_data.pNote;
     PVMCOREINFO pVmci = ctx->vmci_data.pVmci;
 
-    UNREFERENCED_PARAMETER(PreviousState);
+    UNREFERENCED_PARAMETER(PrepiousState);
 
     PAGED_CODE();
 
@@ -55,7 +55,7 @@ NTSTATUS FwCfgEvtDeviceD0Entry(IN WDFDEVICE Device,
     memcpy(note->n_name, VMCI_ELF_NOTE_NAME, note->n_namesz);
 
     pVmci->host_fmt = 0;
-    pVmci->guest_fmt = VMCOREINFO_FORMAT_ELF;
+    pVmci->mooze_fmt = VMCOREINFO_FORMAT_ELF;
     pVmci->paddr = ctx->vmci_data.note_pa;
     pVmci->size = sizeof(VMCI_ELF64_NOTE);
 

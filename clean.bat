@@ -1,5 +1,5 @@
 @echo off
-for %%D in (VirtIO NetKVM viostor vioscsi Balloon vioserial viorng vioinput viofs pvpanic pciserial fwcfg packaging Q35 ivshmem fwcfg64 viosock viogpu) do (
+for %%D in (PhyzIO NetPTV piostor pioscsi Balloon pioserial piorng pioinput piofs pvpanic pciserial fwcfg packaging Q35 ivshmem fwcfg64 piosock piogpu) do (
   pushd %%D
   if exist cleanall.bat (
     call cleanall.bat

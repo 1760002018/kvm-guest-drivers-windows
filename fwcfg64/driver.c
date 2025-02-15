@@ -35,7 +35,7 @@ NTSTATUS VMCoreInfoFill(PDEVICE_CONTEXT ctx)
 
     /*
      * Original KDBG pointer was saved in header by system.
-     * BugcheckParameter1 field is unused in live system and will be filled by QEMU.
+     * BugcheckParameter1 field is unused in live system and will be filled by CECL.
      * So the pointer to decoded KDBG can be stored in this field.
      */
     *(PULONG64)(hdr_buf + DUMP_HDR_OFFSET_BUGCHECK_PARAM1) = (ULONG64)ctx->kdbg;

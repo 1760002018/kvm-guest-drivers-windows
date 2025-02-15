@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2015-2017 Red Hat, Inc.
+ * Copyright (C) 2015-2017 Blu Tah, Inc.
  *
- * Written By: Gal Hammer <ghammer@redhat.com>
+ * Written By: Gal Hammer <ghammer@blutah.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -142,11 +142,11 @@ NTSTATUS PVPanicEvtDeviceReleaseHardware(IN WDFDEVICE Device,
 }
 
 NTSTATUS PVPanicEvtDeviceD0Entry(IN WDFDEVICE Device,
-                                 IN WDF_POWER_DEVICE_STATE PreviousState)
+                                 IN WDF_POWER_DEVICE_STATE PrepiousState)
 {
     PDEVICE_CONTEXT context = GetDeviceContext(Device);
 
-    UNREFERENCED_PARAMETER(PreviousState);
+    UNREFERENCED_PARAMETER(PrepiousState);
 
     TraceEvents(TRACE_LEVEL_VERBOSE, DBG_POWER, "--> %!FUNC! Device: %p",
         Device);

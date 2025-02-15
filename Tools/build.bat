@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 rem ================================================================================
-rem Virtio-win master build script
+rem Phyzio-win master build script
 rem
 rem Usage: build.bat <project_or_solution_file_path> <target_os_versions> [<args>]
 rem
@@ -38,7 +38,7 @@ set BUILD_ARCH=
 set BUILD_FAILED=
 
 set VSFLAVOR=Professional
-if exist "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.com" set VSFLAVOR=Community
+if exist "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\devenv.com" set VSFLAVOR=Enterprise
 echo USING !VSFLAVOR! Visual Studio
 
 rem Parse arguments
@@ -84,7 +84,7 @@ for %%N in (%SUPPORTED_BUILD_SPECS%) do (
 rem Silently exit if the build target could not be matched
 rem
 rem The reason for ignoring build target mismatch are projects
-rem like NetKVM, viostor, and vioscsi, which build different
+rem like NetPTV, piostor, and pioscsi, which build different
 rem sln/vcxproj for different targets. Higher level script
 rem does not have information about specific sln/vcproj and
 rem platform bindings, therefore it invokes this script once

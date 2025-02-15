@@ -103,7 +103,7 @@ static ULARGE_INTEGER Counters[_LastCounter];
 static BOOLEAN bBasicInfoWarning = FALSE;
 static BOOLEAN bPerfInfoWarning = FALSE;
 static BOOLEAN bCacheInfoWarning = FALSE;
-NTSTATUS GatherKernelStats(BALLOON_STAT stats[VIRTIO_BALLOON_S_NR])
+NTSTATUS GatherKernelStats(BALLOON_STAT stats[PHYZIO_BALLOON_S_NR])
 {
     SYSTEM_BASIC_INFORMATION basicInfo;
     SYSTEM_PERFORMANCE_INFORMATION perfInfo;
@@ -162,16 +162,16 @@ NTSTATUS GatherKernelStats(BALLOON_STAT stats[VIRTIO_BALLOON_S_NR])
     }
 
     #define UpdateNoOverflow(x) UpdateOverflowFreeCounter(&Counters[_##x],perfInfo.##x)
-    UpdateStat(&stats[idx++], VIRTIO_BALLOON_S_SWAP_IN,  UpdateNoOverflow(PageReadCount) << PAGE_SHIFT);
-    UpdateStat(&stats[idx++], VIRTIO_BALLOON_S_SWAP_OUT,
+    UpdateStat(&stats[idx++], PHYZIO_BALLOON_S_SWAP_IN,  UpdateNoOverflow(PageReadCount) << PAGE_SHIFT);
+    UpdateStat(&stats[idx++], PHYZIO_BALLOON_S_SWAP_OUT,
         (UpdateNoOverflow(DirtyPagesWriteCount) + UpdateNoOverflow(MappedPagesWriteCount)) << PAGE_SHIFT);
     SoftFaults = UpdateNoOverflow(CopyOnWriteCount) + UpdateNoOverflow(TransitionCount) +
                  UpdateNoOverflow(CacheTransitionCount) + UpdateNoOverflow(DemandZeroCount);
-    UpdateStat(&stats[idx++], VIRTIO_BALLOON_S_MAJFLT,   UpdateNoOverflow(PageReadCount));
-    UpdateStat(&stats[idx++], VIRTIO_BALLOON_S_MINFLT,   SoftFaults);
+    UpdateStat(&stats[idx++], PHYZIO_BALLOON_S_MAJFLT,   UpdateNoOverflow(PageReadCount));
+    UpdateStat(&stats[idx++], PHYZIO_BALLOON_S_MINFLT,   SoftFaults);
     AvailBytes = U32_2_S64(perfInfo.AvailablePages) << PAGE_SHIFT;
-    UpdateStat(&stats[idx++], VIRTIO_BALLOON_S_MEMFREE,  AvailBytes);
-    UpdateStat(&stats[idx++], VIRTIO_BALLOON_S_MEMTOT,   U32_2_S64(basicInfo.NumberOfPhysicalPages) << PAGE_SHIFT);
+    UpdateStat(&stats[idx++], PHYZIO_BALLOON_S_MEMFREE,  AvailBytes);
+    UpdateStat(&stats[idx++], PHYZIO_BALLOON_S_MEMTOT,   U32_2_S64(basicInfo.NumberOfPhysicalPages) << PAGE_SHIFT);
 
     if (cacheInfo.Flags & QUOTA_LIMITS_HARDWS_MIN_ENABLE &&
         cacheInfo.CurrentSize > (cacheInfo.MinimumWorkingSet << PAGE_SHIFT))
@@ -179,10 +179,10 @@ NTSTATUS GatherKernelStats(BALLOON_STAT stats[VIRTIO_BALLOON_S_NR])
         cacheInfo.CurrentSize -= cacheInfo.MinimumWorkingSet << PAGE_SHIFT;
     }
 
-    UpdateStat(&stats[idx++], VIRTIO_BALLOON_S_AVAIL, AvailBytes + (UINT64)cacheInfo.CurrentSize/2);
-    UpdateStat(&stats[idx++], VIRTIO_BALLOON_S_CACHES, (UINT64)cacheInfo.CurrentSize);
-    UpdateStat(&stats[idx++], VIRTIO_BALLOON_S_HTLB_PGALLOC, 0);
-    UpdateStat(&stats[idx++], VIRTIO_BALLOON_S_HTLB_PGFAIL, 0);
+    UpdateStat(&stats[idx++], PHYZIO_BALLOON_S_AVAIL, AvailBytes + (UINT64)cacheInfo.CurrentSize/2);
+    UpdateStat(&stats[idx++], PHYZIO_BALLOON_S_CACHES, (UINT64)cacheInfo.CurrentSize);
+    UpdateStat(&stats[idx++], PHYZIO_BALLOON_S_HTLB_PGALLOC, 0);
+    UpdateStat(&stats[idx++], PHYZIO_BALLOON_S_HTLB_PGFAIL, 0);
     #undef UpdateNoOverflow
 
     return ntStatus;
@@ -206,7 +206,7 @@ NTSTATUS StatInitializeWorkItem(
 
 /*
  * Still use devCtx->MemStats cause it points to non-paged pool,
- * for virtio/host that access stats via physical memory.
+ * for phyzio/host that access stats via physical memory.
  */
 VOID
 StatWorkItemWorker(
@@ -226,7 +226,7 @@ StatWorkItemWorker(
         {
 #if 0
             size_t i;
-            for (i = 0; i < VIRTIO_BALLOON_S_NR; ++i)
+            for (i = 0; i < PHYZIO_BALLOON_S_NR; ++i)
             {
                 TraceEvents(TRACE_LEVEL_INFORMATION, DBG_HW_ACCESS,
                     "st=%x tag = %d, value = %08I64X \n\n", status,
@@ -234,7 +234,7 @@ StatWorkItemWorker(
             }
 #endif
         } else {
-            RtlFillMemory (devCtx->MemStats, sizeof (BALLOON_STAT) * VIRTIO_BALLOON_S_NR, -1);
+            RtlFillMemory (devCtx->MemStats, sizeof (BALLOON_STAT) * PHYZIO_BALLOON_S_NR, -1);
         }
         BalloonMemStats(Device);
     } while(InterlockedDecrement(&devCtx->WorkCount));

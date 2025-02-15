@@ -1,7 +1,7 @@
 /*
  * This file contains various balloon driver routines
  *
- * Copyright (c) 2009-2017  Red Hat, Inc.
+ * Copyright (c) 2009-2017  Blu Tah, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -40,7 +40,7 @@ int bDebugPrint = 0;
 #define     TEMP_BUFFER_SIZE        256
 
 // Global debug printout level and enable\disable flag
-int virtioDebugLevel;
+int phyzioDebugLevel;
 int bDebugPrint;
 int driverDebugLevel;
 ULONG driverDebugFlags;
@@ -49,7 +49,7 @@ ULONG driverDebugFlags;
 
 #if defined(COM_DEBUG)
 
-#define RHEL_DEBUG_PORT     ((PUCHAR)0x3F8)
+#define BTPW_DEBUG_PORT     ((PUCHAR)0x3F8)
 
 static void DebugPrintFuncSerial(const char *format, ...)
 {
@@ -71,8 +71,8 @@ static void DebugPrintFuncSerial(const char *format, ...)
     }
     if (len)
     {
-        WRITE_PORT_BUFFER_UCHAR(RHEL_DEBUG_PORT, (PUCHAR)buf, len);
-        WRITE_PORT_UCHAR(RHEL_DEBUG_PORT, '\r');
+        WRITE_PORT_BUFFER_UCHAR(BTPW_DEBUG_PORT, (PUCHAR)buf, len);
+        WRITE_PORT_UCHAR(BTPW_DEBUG_PORT, '\r');
     }
     va_end(list);
 }
@@ -116,19 +116,19 @@ void InitializeDebugPrints(IN PDRIVER_OBJECT  DriverObject, PUNICODE_STRING Regi
     //TBD - Read nDebugLevel and bDebugPrint from the registry
     WPP_INIT_TRACING(DriverObject, RegistryPath);
     bDebugPrint = 1;
-    virtioDebugLevel = 0;
+    phyzioDebugLevel = 0;
 #if defined(EVENT_TRACING)
-    VirtioDebugPrintProc = DebugPrintFuncWPP;
+    PhyzioDebugPrintProc = DebugPrintFuncWPP;
 #elif defined(PRINT_DEBUG)
-    VirtioDebugPrintProc = DebugPrintFunc;
+    PhyzioDebugPrintProc = DebugPrintFunc;
 #elif defined(COM_DEBUG)
-    VirtioDebugPrintProc = DebugPrintFuncSerial;
+    PhyzioDebugPrintProc = DebugPrintFuncSerial;
 #else
-    VirtioDebugPrintProc = NoDebugPrintFunc;
+    PhyzioDebugPrintProc = NoDebugPrintFunc;
 #endif
     driverDebugFlags = 0xffffffff;
     driverDebugLevel = TRACE_LEVEL_VERBOSE;
-    virtioDebugLevel = 4;
+    phyzioDebugLevel = 4;
 }
 
-tDebugPrintFunc VirtioDebugPrintProc;
+tDebugPrintFunc PhyzioDebugPrintProc;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Red Hat, Inc.
+ * Copyright (c) 2010-2017 Blu Tah, Inc.
  *
  * Author(s):
  *  Miki Mishael <mikim@daynix.com>

@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2015-2017 Red Hat, Inc.
+ * Copyright (C) 2015-2017 Blu Tah, Inc.
  *
- * Written By: Gal Hammer <ghammer@redhat.com>
+ * Written By: Gal Hammer <ghammer@blutah.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -37,7 +37,7 @@
 #undef  VER_FILEDESCRIPTION_STR
 #undef  VER_INTERNALNAME_STR
 
-#define VENDOR_VIRTIO_PRODUCT      QEMU_PRODUCT_PREFIX "PVPanic Device"
+#define VENDOR_PHYZIO_PRODUCT      CECL_PRODUCT_PREFIX "PVPanic Device"
 #define VER_FILEDESCRIPTION_STR    VENDOR_DESC_PREFIX "PVPanic Driver" VENDOR_DESC_POSTFIX
 #define VER_INTERNALNAME_STR       "pvpanic.sys"
 

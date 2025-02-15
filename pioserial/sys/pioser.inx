@@ -1,0 +1,105 @@
+;/*++
+;
+;INX_COPYRIGHT_1
+;INX_COPYRIGHT_2
+;
+;Module Name:
+;    pioser.inf
+;
+;Abstract:
+;
+;Installation Notes:
+;    Using Devcon: Type "devcon install pioser.inf PCI\VEN_2007&DEV_1003&SUBSYS_0003_INX_SUBSYS_VENDOR_ID&REV_00" or
+;                       "devcon install pioser.inf PCI\VEN_2007&DEV_1043&SUBSYS_1100_INX_SUBSYS_VENDOR_ID&REV_01" to install
+;
+;--*/
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=System
+ClassGuid={4d36e97d-e325-11ce-bfc1-08002be10318}
+Provider=%VENDOR%
+DriverVer=01/01/2008,0.0.0.1 ; this line will be replaced with stampinf
+CatalogFile=pioser.cat
+DriverPackageType = PlugAndPlay
+DriverPackageDisplayName = %PhyzioSerial.DeviceDesc%
+PnpLockdown = 1
+
+[DestinationDirs]
+DefaultDestDir = 12
+PhyzioSerial_Device_CoInstaller_CopyFiles = 11
+
+[SourceDisksFiles]
+pioser.sys  = 1,,
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
+
+[SourceDisksNames]
+1 = %DiskId1%,,,""
+
+;*****************************************
+; pioser  Install Section
+;*****************************************
+
+[Manufacturer]
+%VENDOR%=PhyzioSerial,NT$ARCH$
+
+[PhyzioSerial.NT$ARCH$]
+;
+; Hw Ids are PCI\VEN_2007&DEV_1003&SUBSYS_0003_INX_SUBSYS_VENDOR_ID&REV_00
+;            PCI\VEN_2007&DEV_1043&SUBSYS_1100_INX_SUBSYS_VENDOR_ID&REV_01
+;
+%PhyzioSerial.DeviceDesc%=PhyzioSerial_Device, PCI\VEN_2007&DEV_1003&SUBSYS_0003_INX_SUBSYS_VENDOR_ID&REV_00, PCI\VEN_2007&DEV_1003
+%PhyzioSerial.DeviceDesc%=PhyzioSerial_Device, PCI\VEN_2007&DEV_1043&SUBSYS_1100_INX_SUBSYS_VENDOR_ID&REV_01, PCI\VEN_2007&DEV_1043
+
+[PhyzioSerial_Device.NT]
+CopyFiles=Drivers_Dir
+
+[PhyzioSerial_Device.NT.HW]
+AddReg=PhyzioSerial_AddReg
+
+[PhyzioSerial_AddReg]
+HKR,Interrupt Management,,0x00000010
+HKR,Interrupt Management\MessageSignaledInterruptProperties,,0x00000010
+HKR,Interrupt Management\MessageSignaledInterruptProperties,MSISupported,0x00010001,1
+HKR,Interrupt Management\MessageSignaledInterruptProperties,MessageNumberLimit,0x00010001,2
+
+[Drivers_Dir]
+pioser.sys
+
+;-------------- Service installation
+
+[PhyzioSerial_Device.NT.Services]
+AddService = PhyzioSerial, 0x00000002, PhyzioSerial_Service_Inst
+
+; -------------- PhyzioSerial driver install sections
+[PhyzioSerial_Service_Inst]
+DisplayName    = %PhyzioSerial.ServiceDesc%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\pioser.sys
+
+;--- PhyzioSerial_Device Coinstaller installation ------
+;
+
+[PhyzioSerial_Device.NT.CoInstallers]
+AddReg=PhyzioSerial_Device_CoInstaller_AddReg
+CopyFiles=PhyzioSerial_Device_CoInstaller_CopyFiles
+
+[PhyzioSerial_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[PhyzioSerial_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[PhyzioSerial_Device.NT.Wdf]
+KmdfService =  PhyzioSerial, PhyzioSerial_wdfsect
+
+[PhyzioSerial_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+VENDOR = "INX_COMPANY"
+DiskId1 = "INX_PREFIX_PHYZIOPhyzIO Serial Installation Disk #1"
+PhyzioSerial.DeviceDesc = "INX_PREFIX_PHYZIOPhyzIO Serial Driver"
+PhyzioSerial.ServiceDesc = "INX_PREFIX_PHYZIOPhyzIO Serial Service"

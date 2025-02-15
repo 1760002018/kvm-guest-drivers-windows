@@ -1,0 +1,87 @@
+;
+; piocrypt.inf
+;
+
+[Version]
+Signature       = "$WINDOWS NT$"
+Class           = System
+ClassGuid       = {4d36e97d-e325-11ce-bfc1-08002be10318}
+Provider        = %VENDOR%
+CatalogFile     = piocrypt.cat
+PnpLockdown     = 1
+DriverVer       = 01/01/2018,0.0.0.1 ; this line will be replaced with stampinf
+
+[DestinationDirs]
+DefaultDestDir = 12
+piocrypt_Device_CoInstaller_CopyFiles = 11
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+piocrypt.sys  = 1,,
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%VENDOR%=piocrypt,NT$ARCH$
+
+[AddReg.MSI]
+HKR,Interrupt Management,,0x00000010
+HKR,Interrupt Management\MessageSignaledInterruptProperties,,0x00000010
+HKR,Interrupt Management\MessageSignaledInterruptProperties,MSISupported,0x00010001,1
+HKR,Interrupt Management\MessageSignaledInterruptProperties,MessageNumberLimit,0x00010001,1
+
+[piocrypt.NT$ARCH$]
+%piocrypt.DeviceDesc%=piocrypt_Device, PCI\VEN_2007&DEV_1054&SUBSYS_1100_INX_SUBSYS_VENDOR_ID&REV_01, PCI\VEN_2007&DEV_1054
+
+[piocrypt_Device.NT]
+CopyFiles=Drivers_Dir
+
+[piocrypt_Device.NT.HW]
+AddReg = AddReg.MSI
+
+[Drivers_Dir]
+piocrypt.sys
+
+;-------------- Service installation
+[piocrypt_Device.NT.Services]
+AddService = piocrypt,%SPSVCINST_ASSOCSERVICE%, piocrypt_Service_Inst
+
+; -------------- piocrypt driver install sections
+[piocrypt_Service_Inst]
+DisplayName    = %piocrypt.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\piocrypt.sys
+
+;
+;--- piocrypt_Device Coinstaller installation ------
+;
+
+[piocrypt_Device.NT.CoInstallers]
+AddReg=piocrypt_Device_CoInstaller_AddReg
+CopyFiles=piocrypt_Device_CoInstaller_CopyFiles
+
+[piocrypt_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[piocrypt_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[piocrypt_Device.NT.Wdf]
+KmdfService =  piocrypt, piocrypt_wdfsect
+
+[piocrypt_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+VENDOR              = "INX_COMPANY"
+DiskName            = "INX_PREFIX_PHYZIOPhyzIO Crypto Installation Disk"
+piocrypt.DeviceDesc = "INX_PREFIX_PHYZIOPhyzIO Crypto Device"
+piocrypt.SVCDESC     = "INX_PREFIX_PHYZIOPhyzIO Crypto Service"
