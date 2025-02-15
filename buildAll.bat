@@ -1,15 +1,15 @@
 @echo off
-call tools\build.bat virtio-win.sln Win10 ARM64
+call tools\build.bat phyzio-win.sln Win10 ARM64
 if errorlevel 1 goto :fail
-if "%VIRTIO_WIN_NO_LEGACY%"=="" call tools\build.bat virtio-win.sln "Wxp Wnet Wlh Win7" %*
+if "%PHYZIO_WIN_NO_LEGACY%"=="" call tools\build.bat phyzio-win.sln "Wxp Wnet Wlh Win7" %*
 if errorlevel 1 goto :fail
-call tools\build.bat virtio-win.sln "Win8 Win8.1 Win10" %*
+call tools\build.bat phyzio-win.sln "Win8 Win8.1 Win10" %*
 if errorlevel 1 goto :fail
-call tools\build.bat NetKVM\NetKVM-VS2015.vcxproj "Win10_SDV" %*
+call tools\build.bat NetPTV\NetPTV-VS2015.vcxproj "Win10_SDV" %*
 if errorlevel 1 goto :fail
-call tools\build.bat vioscsi\vioscsi.vcxproj "Win8_SDV Win10_SDV" %*
+call tools\build.bat pioscsi\pioscsi.vcxproj "Win8_SDV Win10_SDV" %*
 if errorlevel 1 goto :fail
-call tools\build.bat viostor\viostor.vcxproj "Win8_SDV Win10_SDV" %*
+call tools\build.bat piostor\piostor.vcxproj "Win8_SDV Win10_SDV" %*
 if errorlevel 1 goto :fail
 call tools\build.bat ivshmem\ivshmem.vcxproj "Win10_SDV" %*
 if errorlevel 1 goto :fail

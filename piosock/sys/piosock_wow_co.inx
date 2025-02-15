@@ -1,0 +1,115 @@
+;/*++
+;
+;INX_COPYRIGHT_1
+;INX_COPYRIGHT_2
+;
+;Module Name:
+;    piosock.inf
+;
+;Abstract:
+;
+;Installation Notes:
+;    Using Devcon: Type "devcon install piosock.inf PCI\VEN_1960&DEV_1012&SUBSYS_0013_INX_SUBSYS_VENDOR_ID&REV_00" and
+;                       "devcon install piosock.inf PCI\VEN_1960&DEV_1053&SUBSYS_1100_INX_SUBSYS_VENDOR_ID&REV_01" to install.
+;
+;--*/
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=System
+ClassGuid={4d36e97d-e325-11ce-bfc1-08002be10318}
+Provider=%VENDOR%
+DriverVer=01/01/2008,0.0.0.1 ; this line will be replaced with stampinf
+CatalogFile=piosock.cat
+DriverPackageType = PlugAndPlay
+DriverPackageDisplayName = %PhyzioSocket.DeviceDesc%
+PnpLockdown = 1
+
+[DestinationDirs]
+DefaultDestDir = 12
+PhyzioSocket_Device_CoInstaller_CopyFiles = 11
+PhyzioSocket_Lib_CopyFiles = 11
+PhyzioSocket_Lib_CopyFiles.WOW64 = 16425
+
+[SourceDisksFiles]
+piosock.sys  = 1,,
+piosocklib_x64.dll = 1
+piosocklib_x86.dll = 1
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll = 1 ; make sure the number matches with SourceDisksNames
+
+[SourceDisksNames]
+1 = %DiskId1%,,,""
+
+;*****************************************
+; piosock  Install Section
+;*****************************************
+
+[Manufacturer]
+%VENDOR%=PhyzioSocket,NT$ARCH$
+
+[PhyzioSocket.NT$ARCH$]
+;
+; Hw Ids are PCI\VEN_1960&DEV_1012&SUBSYS_0013_INX_SUBSYS_VENDOR_ID&REV_00
+;
+%PhyzioSocket.DeviceDesc%=PhyzioSocket_Device, PCI\VEN_1960&DEV_1012&SUBSYS_0013_INX_SUBSYS_VENDOR_ID&REV_00, PCI\VEN_1960&DEV_1012
+%PhyzioSocket.DeviceDesc%=PhyzioSocket_Device, PCI\VEN_1960&DEV_1053&SUBSYS_1100_INX_SUBSYS_VENDOR_ID&REV_01, PCI\VEN_1960&DEV_1053
+
+[PhyzioSocket_Device.NT]
+CopyFiles=Drivers_Dir,PhyzioSocket_Lib_CopyFiles,PhyzioSocket_Lib_CopyFiles.WOW64
+
+[PhyzioSocket_Device.NT.HW]
+AddReg=PhyzioSocket_AddReg
+
+[PhyzioSocket_AddReg]
+HKR,Interrupt Management,,0x00000010
+HKR,Interrupt Management\MessageSignaledInterruptProperties,,0x00000010
+HKR,Interrupt Management\MessageSignaledInterruptProperties,MSISupported,0x00010001,1
+HKR,Interrupt Management\MessageSignaledInterruptProperties,MessageNumberLimit,0x00010001,1
+
+[Drivers_Dir]
+piosock.sys
+
+[PhyzioSocket_Lib_CopyFiles]
+piosocklib.dll,piosocklib_x64.dll,,0x00004000   ;  COPYFLG_IN_USE_TRY_RENAME
+
+[PhyzioSocket_Lib_CopyFiles.WOW64]
+piosocklib.dll,piosocklib_x86.dll,,0x00004000   ;  COPYFLG_IN_USE_TRY_RENAME
+
+;-------------- Service installation
+
+[PhyzioSocket_Device.NT.Services]
+AddService = PhyzioSocket, 0x00000002, PhyzioSocket_Service_Inst
+
+; -------------- PhyzioSocket driver install sections
+[PhyzioSocket_Service_Inst]
+DisplayName    = %PhyzioSocket.ServiceDesc%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\piosock.sys
+
+;--- PhyzioSocket_Device Coinstaller installation ------
+;
+
+[PhyzioSocket_Device.NT.CoInstallers]
+AddReg=PhyzioSocket_Device_CoInstaller_AddReg
+CopyFiles=PhyzioSocket_Device_CoInstaller_CopyFiles
+
+[PhyzioSocket_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000,"piosocklib.dll,PiosockCoInstaller", \
+    "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[PhyzioSocket_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[PhyzioSocket_Device.NT.Wdf]
+KmdfService =  PhyzioSocket, PhyzioSocket_wdfsect
+
+[PhyzioSocket_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+VENDOR = "INX_COMPANY"
+DiskId1 = "INX_PREFIX_PHYZIOPhyzIO Socket Installation Disk #1"
+PhyzioSocket.DeviceDesc = "INX_PREFIX_PHYZIOPhyzIO Socket Driver"
+PhyzioSocket.ServiceDesc = "INX_PREFIX_PHYZIOPhyzIO Socket Service"

@@ -1,6 +1,6 @@
 @ Echo off
 REM -----------------------------------------------------------------------
-REM  Copyright (c) 2010-2017 Red Hat, Inc.
+REM  Copyright (c) 2010-2017 Blu Tah, Inc.
 REM
 REM  Author(s):
 REM   Miki Mishael <mikim@daynix.com>
@@ -47,11 +47,11 @@ Echo.
 Echo Please choose which operation would you like to Verify:
 Echo.
 Echo     (1): Verify     All Projects (ALL Configurations)
-Echo     (2): Verify     NetKVM       (ALL Configurations)
-Echo     (3): Verify     Vioserial    (ALL Configurations)
+Echo     (2): Verify     NetPTV       (ALL Configurations)
+Echo     (3): Verify     Pioserial    (ALL Configurations)
 Echo     (4): Verify     Balloon      (ALL Configurations)
-Echo     (5): Verify     Vioscsi      (ALL Configurations)
-Echo     (6): Verify     Viostor      (ALL Configurations)
+Echo     (5): Verify     Pioscsi      (ALL Configurations)
+Echo     (6): Verify     Piostor      (ALL Configurations)
 Echo     (7): Quit
 Echo.
 Echo ========================================================
@@ -93,22 +93,22 @@ Rem  *******************************************************************
 Rem  *******************************************************************
 
 Rem  *******************************************************************
-Rem                 Build VirtIO
+Rem                 Build PhyzIO
 Rem  *******************************************************************
 COLOR
-cd VirtIO
+cd PhyzIO
 call buildAll.bat
 cd ..
 Rem  *******************************************************************
-Rem             NetKVM Vioserial Balloon Vioscsi Viostor
+Rem             NetPTV Pioserial Balloon Pioscsi Piostor
 Rem  *******************************************************************
 :Var
 if "%var%"=="1" ( Goto Process)
-if "%var%"=="2" ( Goto NetKVM)
-if "%var%"=="3" ( Goto Vioserial)
+if "%var%"=="2" ( Goto NetPTV)
+if "%var%"=="3" ( Goto Pioserial)
 if "%var%"=="4" ( Goto Balloon)
-if "%var%"=="5" ( Goto Vioscsi)
-if "%var%"=="6" ( Goto Viostor)
+if "%var%"=="5" ( Goto Pioscsi)
+if "%var%"=="6" ( Goto Piostor)
 
 Echo = Variables ============================================
 Echo.
@@ -116,16 +116,16 @@ Rem  ***************************************************************************
 Rem  Set PROJECT_XML_PATH, PROJECT_DIR_PATH PROJECT_NAME, ROOT_PATH for RunSdv.bat
 Rem  *****************************************************************************
 
-:NetKVM
-SET PROJECT_XML_PATH=%ROOT_PATH%"NetKVM\NetKVM.vcxproj"
-SET PROJECT_DIR_PATH=%ROOT_PATH%"NetKVM"
-SET PROJECT_NAME="NetKVM"
+:NetPTV
+SET PROJECT_XML_PATH=%ROOT_PATH%"NetPTV\NetPTV.vcxproj"
+SET PROJECT_DIR_PATH=%ROOT_PATH%"NetPTV"
+SET PROJECT_NAME="NetPTV"
 Goto SetParam
 
-:Vioserial
-SET PROJECT_XML_PATH=%ROOT_PATH%"vioserial\sys\vioser.vcxproj"
-SET PROJECT_DIR_PATH=%ROOT_PATH%"vioserial\sys"
-SET PROJECT_NAME="vioser"
+:Pioserial
+SET PROJECT_XML_PATH=%ROOT_PATH%"pioserial\sys\pioser.vcxproj"
+SET PROJECT_DIR_PATH=%ROOT_PATH%"pioserial\sys"
+SET PROJECT_NAME="pioser"
 Goto SetParam
 
 :Balloon
@@ -134,16 +134,16 @@ SET PROJECT_DIR_PATH=%ROOT_PATH%"balloon\sys"
 SET PROJECT_NAME="balloon"
 Goto SetParam
 
-:Vioscsi
-SET PROJECT_XML_PATH=%ROOT_PATH%"vioscsi\vioscsi.vcxproj"
-SET PROJECT_DIR_PATH=%ROOT_PATH%"vioscsi"
-SET PROJECT_NAME="vioscsi"
+:Pioscsi
+SET PROJECT_XML_PATH=%ROOT_PATH%"pioscsi\pioscsi.vcxproj"
+SET PROJECT_DIR_PATH=%ROOT_PATH%"pioscsi"
+SET PROJECT_NAME="pioscsi"
 Goto SetParam
 
-:Viostor
-SET PROJECT_XML_PATH=%ROOT_PATH%"viostor\viostor.vcxproj"
-SET PROJECT_DIR_PATH=%ROOT_PATH%"viostor"
-SET PROJECT_NAME="viostor"
+:Piostor
+SET PROJECT_XML_PATH=%ROOT_PATH%"piostor\piostor.vcxproj"
+SET PROJECT_DIR_PATH=%ROOT_PATH%"piostor"
+SET PROJECT_NAME="piostor"
 Goto SetParam
 
 :SetParam
@@ -161,15 +161,15 @@ Rem  *******************************************************************
 if  "%var%"=="1" (
 SET all=true
 :p2
-Goto Vioserial
+Goto Pioserial
 :p3
 Goto Balloon
 :p4
-Goto Viostor
+Goto Piostor
 :p5
-Goto Vioscsi
+Goto Pioscsi
 :p6
-Goto NetKVM
+Goto NetPTV
 :IterateAll
     call RunSdv.bat %parm1% %parm2% %parm3% %parm4%
     IF %ERRORLEVEL% NEQ 0 SET err=1

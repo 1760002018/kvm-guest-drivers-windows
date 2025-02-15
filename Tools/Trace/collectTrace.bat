@@ -3,7 +3,7 @@ SETLOCAL EnableDelayedExpansion
 
 SET Filename=%1.etl
 SET Guid=%2
-SET DataCollector="virtiowin"
+SET DataCollector="phyziowin"
 
 IF [%Filename%]==[] (
     GOTO PRINT_HELP_TEXT

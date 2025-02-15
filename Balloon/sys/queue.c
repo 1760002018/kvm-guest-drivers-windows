@@ -77,7 +77,7 @@ BalloonIoWrite(
 
     if (devCtx->HandleWriteRequest)
     {
-        Length = min(buffSize, sizeof(BALLOON_STAT) * VIRTIO_BALLOON_S_NR);
+        Length = min(buffSize, sizeof(BALLOON_STAT) * PHYZIO_BALLOON_S_NR);
 #if 0
         {
             size_t i;

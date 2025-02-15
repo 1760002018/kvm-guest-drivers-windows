@@ -1,0 +1,40 @@
+;/*++
+;
+;Copyright (c) 2016-2017 Blu Tah Inc.
+;
+;Module Name:
+;    ceclfwcfg.inf
+;
+;Abstract:
+;    CECL Firmware Configuration Device null driver
+;
+;Installation Notes:
+;    Using Devcon: Type "devcon install ceclfwcfg.inf ACPI\CECL0002" to install
+;
+;--*/
+
+[Version]
+Signature="$Windows NT$"
+Class=System
+ClassGUID={4d36e97d-e325-11ce-bfc1-08002be10318}
+Provider=%CECL%
+DriverVer=10/21/2016,1.0.0
+CatalogFile=ceclfwcfg.cat
+
+[Manufacturer]
+%CECL%=CECL,NTx86,NTAMD64
+
+[CECL.NTx86]
+%FWCfg.DeviceDesc% = FWCfg_Device, ACPI\CECL0002
+
+[CECL.NTAMD64]
+%FWCfg.DeviceDesc% = FWCfg_Device, ACPI\CECL0002
+
+[FWCfg_Device.NT]
+
+[FWCfg_Device.NT.Services]
+AddService = ,2    ; no value for the service name
+
+[Strings]
+CECL="CECL"
+FWCfg.DeviceDesc = "CECL FWCfg Device"

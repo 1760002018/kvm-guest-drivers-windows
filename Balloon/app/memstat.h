@@ -26,7 +26,7 @@ private:
     BOOL initialized;
     CComPtr< IWbemLocator > locator;
     CComPtr< IWbemServices > service;
-    BALLOON_STAT m_Stats[VIRTIO_BALLOON_S_NR];
+    BALLOON_STAT m_Stats[PHYZIO_BALLOON_S_NR];
 };
 
 #endif

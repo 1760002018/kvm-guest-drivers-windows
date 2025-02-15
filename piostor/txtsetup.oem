@@ -1,0 +1,58 @@
+[Disks]
+d2 = "OEM DISK (SCSI) Win2003/32-bit",\disk1,\i386\Win2003
+d3 = "OEM DISK (SCSI) Win2003/64-bit",\disk1,\amd64\Win2003
+d4 = "OEM DISK (SCSI) Win2003/32-bit",\disk1,\i386\Win2003
+d5 = "OEM DISK (SCSI) Win2003/64-bit",\disk1,\amd64\Win2003
+
+[Defaults]
+SCSI = WNET32
+
+[scsi]
+WNET32 = "Blu Tah PhyzIO BLOCK Disk Device Win2003/32-bit"
+WNET64 = "Blu Tah PhyzIO BLOCK Disk Device Win2003/64-bit"
+WNET32_SCSI = "Blu Tah PhyzIO SCSI Disk Device Win2003/32-bit"
+WNET64_SCSI = "Blu Tah PhyzIO SCSI Disk Device Win2003/64-bit"
+
+[Files.scsi.WNET32]
+driver = d2, piostor.sys, piostor
+inf    = d2, piostor.inf
+catalog= d2, piostor.cat
+
+[Files.scsi.WNET32_SCSI]
+driver = d4, pioscsi.sys, pioscsi
+inf    = d4, pioscsi.inf
+catalog= d4, pioscsi.cat
+
+[Files.scsi.WNET64]
+driver = d3, piostor.sys, piostor
+inf    = d3, piostor.inf
+catalog= d3, piostor.cat
+
+[Files.scsi.WNET64_SCSI]
+driver = d5, pioscsi.sys, pioscsi
+inf    = d5, pioscsi.inf
+catalog= d5, pioscsi.cat
+
+[HardwareIds.scsi.WNET32]
+id = "PCI\VEN_1960&DEV_1001&SUBSYS_00021960&REV_00", "piostor"
+
+[HardwareIds.scsi.WNET32_SCSI]
+id = "PCI\VEN_1960&DEV_1004&SUBSYS_00081960&REV_00", "pioscsi"
+
+[HardwareIds.scsi.WNET64]
+id = "PCI\VEN_1960&DEV_1001&SUBSYS_00021960&REV_00", "piostor"
+
+[HardwareIds.scsi.WNET64_SCSI]
+id = "PCI\VEN_1960&DEV_1004&SUBSYS_00081960&REV_00", "pioscsi"
+
+[Config.WNET32]
+value = Parameters\PnpInterface,5,REG_DWORD,1
+
+[Config.WNET64]
+value = Parameters\PnpInterface,5,REG_DWORD,1
+
+[Config.WNET32_SCSI]
+value = Parameters\PnpInterface,5,REG_DWORD,1
+
+[Config.WNET64_SCSI]
+value = Parameters\PnpInterface,5,REG_DWORD,1

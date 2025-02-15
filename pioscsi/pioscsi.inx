@@ -1,0 +1,123 @@
+;/*++
+;
+;INX_COPYRIGHT_1
+;INX_COPYRIGHT_2
+;
+;Module Name:
+;    pioscsi.inf
+;
+;Abstract:
+;
+;Installation Notes:
+;    Using Devcon: Type "devcon install pioscsi.inf PCI\VEN_1960&DEV_1004&SUBSYS_0008_INX_SUBSYS_VENDOR_ID&REV_00" or
+;                       "devcon install pioscsi.inf PCI\VEN_1960&DEV_1048&SUBSYS_1100_INX_SUBSYS_VENDOR_ID&REV_01" to install
+;
+;--*/
+
+[Version]
+Signature="$Windows NT$"
+Class=SCSIAdapter
+ClassGUID={4D36E97B-E325-11CE-BFC1-08002BE10318}
+Provider=%VENDOR%
+DriverVer=01/01/2008,0.0.0.1 ; this line will be replaced with stampinf
+CatalogFile=pioscsi.cat
+DriverPackageType = PlugAndPlay
+DriverPackageDisplayName = %PhyzioScsi.DeviceDesc%
+
+;
+; Source file information
+;
+
+[SourceDisksNames]
+1 = %DiskId1%,,,""
+
+[SourceDisksFiles]
+pioscsi.sys = 1,,
+
+[ControlFlags]
+;ExcludeFromSelect = *
+
+[DestinationDirs]
+DefaultDestDir = 10
+pioscsi_Files_Driver = 12
+
+;
+; Driver information
+;
+
+[Manufacturer]
+%VENDOR%   = PhyzioScsi,NT$ARCH$
+
+[PhyzioScsi.NT$ARCH$]
+%PhyzioScsi.DeviceDesc% = scsi_inst, PCI\VEN_1960&DEV_1004&SUBSYS_0008_INX_SUBSYS_VENDOR_ID&REV_00, PCI\VEN_1960&DEV_1004
+%PhyzioScsi.DeviceDesc% = scsi_inst, PCI\VEN_1960&DEV_1048&SUBSYS_1100_INX_SUBSYS_VENDOR_ID&REV_01, PCI\VEN_1960&DEV_1048
+
+;
+; General installation section
+;
+
+[pioscsi_Files_Driver]
+pioscsi.sys,,,2
+
+[scsi_inst]
+CopyFiles=pioscsi_Files_Driver
+
+;
+; Service Installation
+;
+
+[scsi_inst.Services]
+AddService = pioscsi, 0x00000002 , scsi_Service_Inst, scsi_EventLog_Inst
+
+[scsi_Service_Inst]
+DisplayName    = %PhyzioScsi.SVCDESC%
+ServiceType    = %SERVICE_KERNEL_DRIVER%
+StartType      = %SERVICE_BOOT_START%
+ErrorControl   = %SERVICE_ERROR_NORMAL%
+ServiceBinary  = %12%\pioscsi.sys
+LoadOrderGroup = SCSI miniport
+AddReg         = pnpsafe_pci_addreg
+
+[scsi_inst.HW]
+AddReg         = pnpsafe_pci_addreg_msix
+
+[scsi_EventLog_Inst]
+AddReg = scsi_EventLog_AddReg
+
+[scsi_EventLog_AddReg]
+HKR,,EventMessageFile,%REG_EXPAND_SZ%,"%%SystemRoot%%\System32\IoLogMsg.dll"
+HKR,,TypesSupported,%REG_DWORD%,7
+
+
+[pnpsafe_pci_addreg]
+HKR, "Parameters\PnpInterface", "5", %REG_DWORD%, 0x00000001
+HKR, "Parameters", "BusType", %REG_DWORD%, 0x0000000A
+
+[pnpsafe_pci_addreg_msix]
+HKR, "Interrupt Management",, 0x00000010
+HKR, "Interrupt Management\MessageSignaledInterruptProperties",, 0x00000010
+HKR, "Interrupt Management\MessageSignaledInterruptProperties", MSISupported, 0x00010001, 1
+HKR, "Interrupt Management\MessageSignaledInterruptProperties", MessageNumberLimit, 0x00010001, 256
+HKR, "Interrupt Management\Affinity Policy",, 0x00000010
+HKR, "Interrupt Management\Affinity Policy", DevicePolicy, 0x00010001, 5
+HKR, "Interrupt Management\Affinity Policy", DevicePriority, 0x00010001, 3
+
+
+[Strings]
+;
+; Localizable Strings
+;
+VENDOR = "INX_COMPANY"
+diskId1 = "INX_PREFIX_VENDORPhyzIO SCSI pass-through controller Installation Disk"
+PhyzioScsi.DeviceDesc = "INX_PREFIX_VENDORPhyzIO SCSI pass-through controller"
+PhyzioScsi.SVCDESC = "INX_PREFIX_VENDORPhyzIO SCSI pass-through Service"
+
+;
+; Non-Localizable Strings
+;
+
+REG_EXPAND_SZ  = 0x00020000
+REG_DWORD      = 0x00010001
+SERVICE_KERNEL_DRIVER  = 1
+SERVICE_BOOT_START     = 0
+SERVICE_ERROR_NORMAL   = 1

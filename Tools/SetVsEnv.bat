@@ -10,5 +10,5 @@ goto :eof
 
 :checkvs
 set VSFLAVOR=Professional
-if exist "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" set VSFLAVOR=Community
+if exist "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" set VSFLAVOR=Enterprise
 goto :eof

@@ -1,0 +1,9 @@
+
+LIBRARY "piorngci"
+
+EXPORTS
+
+	VirtRngCoInstaller
+
+	RegisterProvider
+	UnregisterProvider

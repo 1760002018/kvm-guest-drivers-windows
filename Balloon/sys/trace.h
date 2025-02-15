@@ -1,7 +1,7 @@
 /*
  * This file contains trace and debugging related definitions
  *
- * Copyright (c) 2009-2017  Red Hat, Inc.
+ * Copyright (c) 2009-2017  Blu Tah, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -70,7 +70,7 @@ extern int driverDebugLevel;
 
 #define TraceEvents(level, flags, message, ...) \
 if (level > driverDebugLevel || !bDebugPrint || !(driverDebugFlags & flags)) {} \
-else VirtioDebugPrintProc(message, __VA_ARGS__)
+else PhyzioDebugPrintProc(message, __VA_ARGS__)
 
 #define WPP_INIT_TRACING(a,b)
 #define WPP_CLEANUP(DriverObject)

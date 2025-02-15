@@ -1,0 +1,129 @@
+;/*++
+;
+;INX_COPYRIGHT_1
+;INX_COPYRIGHT_2
+;
+;Module Name:
+;    pioinput.inf
+;
+;Abstract:
+;
+;Installation Notes:
+;    Using Devcon: Type "devcon install pioinput.inf PCI\VEN_1960&DEV_1052&SUBSYS_1100_INX_SUBSYS_VENDOR_ID&REV_01" to install
+;
+;--*/
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=HIDClass
+ClassGuid={745a17a0-74d3-11d0-b6fe-00a0c90f57da}
+Provider=%VENDOR%
+DriverVer=01/01/2008,0.0.0.1 ; this line will be replaced with stampinf
+CatalogFile=pioinput.cat
+DriverPackageType = PlugAndPlay
+DriverPackageDisplayName = %PhyzioInput.DeviceDesc%
+PnpLockdown = 1
+
+; ================= Class section =====================
+
+;[ClassInstall32]
+;Addreg=PhyzioInputClassReg
+
+;[PhyzioInputClassReg]
+;HKR,,,0,%ClassName%
+;HKR,,Icon,,-5
+
+[DestinationDirs]
+DefaultDestDir = 12
+PhyzioInput_Device_CoInstaller_CopyFiles = 11
+
+[SourceDisksFiles]
+pioinput.sys  = 1,,
+piohidkmdf.sys = 1,,
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
+
+[SourceDisksNames]
+1 = %DiskId1%,,,""
+
+;*****************************************
+; pioinput  Install Section
+;*****************************************
+
+[Manufacturer]
+%VENDOR%=PhyzioInput,NT$ARCH$
+
+[PhyzioInput.NT$ARCH$]
+;
+; Hw Id is PCI\VEN_1960&DEV_1052&SUBSYS_1100_INX_SUBSYS_VENDOR_ID&CC_090200&REV_01
+;
+%PhyzioInput.DeviceDesc%=PhyzioInput_Device, PCI\VEN_1960&DEV_1052&SUBSYS_1100_INX_SUBSYS_VENDOR_ID&REV_01, PCI\VEN_1960&DEV_1052
+%PhyzioInput.ChildDesc%=PhyzioInput_Child, PIOINPUT\REV_01
+
+[PhyzioInput_Device.NT]
+CopyFiles=CopyFiles_Device
+
+[PhyzioInput_Child.NT]
+CopyFiles=CopyFiles_Child
+
+[PhyzioInput_Device.NT.HW]
+AddReg=PhyzioInput_AddReg
+
+[PhyzioInput_AddReg]
+HKR,Interrupt Management,,0x00000010
+HKR,Interrupt Management\MessageSignaledInterruptProperties,,0x00000010
+HKR,Interrupt Management\MessageSignaledInterruptProperties,MSISupported,0x00010001,1
+HKR,Interrupt Management\MessageSignaledInterruptProperties,MessageNumberLimit,0x00010001,2
+
+[CopyFiles_Device]
+pioinput.sys
+
+[CopyFiles_Child]
+piohidkmdf.sys
+
+;-------------- Service installation
+
+[PhyzioInput_Device.NT.Services]
+AddService = PhyzioInput, 0x00000002, PhyzioInput_Service_Inst  ;flag 0x2 sets this as the service for the device
+
+[PhyzioInput_Child.NT.Services]
+AddService = piohidkmdf, 0x00000002, piohidkmdf_Service_Inst
+
+; -------------- PhyzioInput driver install sections
+[piohidkmdf_Service_Inst]
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\piohidkmdf.sys
+
+[PhyzioInput_Service_Inst]
+DisplayName    = %PhyzioInput.ServiceDesc%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\pioinput.sys
+
+;--- PhyzioInput_Device Coinstaller installation ------
+;
+
+[PhyzioInput_Device.NT.CoInstallers]
+AddReg=PhyzioInput_Device_CoInstaller_AddReg
+CopyFiles=PhyzioInput_Device_CoInstaller_CopyFiles
+
+[PhyzioInput_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[PhyzioInput_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[PhyzioInput_Device.NT.Wdf]
+KmdfService =  PhyzioInput, PhyzioInput_wdfsect
+
+[PhyzioInput_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+VENDOR = "INX_COMPANY"
+DiskId1 = "INX_PREFIX_PHYZIOPhyzIO Input Installation Disk #1"
+PhyzioInput.DeviceDesc = "INX_PREFIX_PHYZIOPhyzIO Input Driver"
+PhyzioInput.ChildDesc = "INX_PREFIX_PHYZIOPhyzIO Input Driver Helper"
+PhyzioInput.ServiceDesc = "INX_PREFIX_PHYZIOPhyzIO Input Service"

@@ -6,17 +6,17 @@
 DEFINE_GUID(GUID_DEVINTERFACE_BALLOON,
 0xe18b5fb3, 0x4e4, 0x42fc, 0x96, 0x1, 0x83, 0x95, 0xc2, 0x17, 0x39, 0x1b);
 
-#define VIRTIO_BALLOON_S_SWAP_IN  0   /* Amount of memory swapped in */
-#define VIRTIO_BALLOON_S_SWAP_OUT 1   /* Amount of memory swapped out */
-#define VIRTIO_BALLOON_S_MAJFLT   2   /* Number of major faults */
-#define VIRTIO_BALLOON_S_MINFLT   3   /* Number of minor faults */
-#define VIRTIO_BALLOON_S_MEMFREE  4   /* Total amount of free memory */
-#define VIRTIO_BALLOON_S_MEMTOT   5   /* Total amount of memory */
-#define VIRTIO_BALLOON_S_AVAIL    6   /* Available memory */
-#define VIRTIO_BALLOON_S_CACHES   7   /* Disk caches */
-#define VIRTIO_BALLOON_S_HTLB_PGALLOC  8  /* Hugetlb page allocations */
-#define VIRTIO_BALLOON_S_HTLB_PGFAIL   9  /* Hugetlb page allocation failures */
-#define VIRTIO_BALLOON_S_NR       10
+#define PHYZIO_BALLOON_S_SWAP_IN  0   /* Amount of memory swapped in */
+#define PHYZIO_BALLOON_S_SWAP_OUT 1   /* Amount of memory swapped out */
+#define PHYZIO_BALLOON_S_MAJFLT   2   /* Number of major faults */
+#define PHYZIO_BALLOON_S_MINFLT   3   /* Number of minor faults */
+#define PHYZIO_BALLOON_S_MEMFREE  4   /* Total amount of free memory */
+#define PHYZIO_BALLOON_S_MEMTOT   5   /* Total amount of memory */
+#define PHYZIO_BALLOON_S_AVAIL    6   /* Available memory */
+#define PHYZIO_BALLOON_S_CACHES   7   /* Disk caches */
+#define PHYZIO_BALLOON_S_HTLB_PGALLOC  8  /* Hugetlb page allocations */
+#define PHYZIO_BALLOON_S_HTLB_PGFAIL   9  /* Hugetlb page allocation failures */
+#define PHYZIO_BALLOON_S_NR       10
 
 #pragma pack (push)
 #pragma pack (1)

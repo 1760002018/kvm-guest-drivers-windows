@@ -1,10 +1,10 @@
 /*
  * This file contains balloon driver routines
  *
- * Copyright (c) 2009-2017  Red Hat, Inc.
+ * Copyright (c) 2009-2017  Blu Tah, Inc.
  *
  * Author(s):
- *  Vadim Rozenfeld <vrozenfe@redhat.com>
+ *  Vadim Rozenfeld <vrozenfe@blutah.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -43,10 +43,10 @@ BalloonInit(
     NTSTATUS            status = STATUS_SUCCESS;
     PDEVICE_CONTEXT     devCtx = GetDeviceContext(WdfDevice);
     u64 u64HostFeatures;
-    u64 u64GuestFeatures = 0;
+    u64 u64MoozeFeatures = 0;
     bool notify_stat_queue = false;
-    VIRTIO_WDF_QUEUE_PARAM params[3];
-    PVIOQUEUE vqs[3];
+    PHYZIO_WDF_QUEUE_PARAM params[3];
+    PPIOQUEUE vqs[3];
     ULONG nvqs;
 
     TraceEvents(TRACE_LEVEL_INFORMATION, DBG_PNP, "--> BalloonInit\n");
@@ -62,14 +62,14 @@ BalloonInit(
     // stats
     params[2].Interrupt = devCtx->WdfInterrupt;
 
-    u64HostFeatures = VirtIOWdfGetDeviceFeatures(&devCtx->VDevice);
+    u64HostFeatures = PhyzIOWdfGetDeviceFeatures(&devCtx->VDevice);
 
-    if (virtio_is_feature_enabled(u64HostFeatures, VIRTIO_BALLOON_F_STATS_VQ))
+    if (phyzio_is_feature_enabled(u64HostFeatures, PHYZIO_BALLOON_F_STATS_VQ))
     {
         TraceEvents(TRACE_LEVEL_INFORMATION, DBG_PNP,
             "Enable stats feature.\n");
 
-        virtio_feature_enable(u64GuestFeatures, VIRTIO_BALLOON_F_STATS_VQ);
+        phyzio_feature_enable(u64MoozeFeatures, PHYZIO_BALLOON_F_STATS_VQ);
         nvqs = 3;
     }
     else
@@ -77,11 +77,11 @@ BalloonInit(
         nvqs = 2;
     }
 
-    status = VirtIOWdfSetDriverFeatures(&devCtx->VDevice, u64GuestFeatures, 0);
+    status = PhyzIOWdfSetDriverFeatures(&devCtx->VDevice, u64MoozeFeatures, 0);
     if (NT_SUCCESS(status))
     {
         // initialize 2 or 3 queues
-        status = VirtIOWdfInitQueues(&devCtx->VDevice, nvqs, vqs, params);
+        status = PhyzIOWdfInitQueues(&devCtx->VDevice, nvqs, vqs, params);
         if (NT_SUCCESS(status))
         {
             devCtx->InfVirtQueue = vqs[0];
@@ -89,12 +89,12 @@ BalloonInit(
 
             if (nvqs == 3)
             {
-                VIO_SG  sg;
+                PIO_SG  sg;
 
                 devCtx->StatVirtQueue = vqs[2];
 
-                sg.physAddr = VirtIOWdfDeviceGetPhysicalAddress(&devCtx->VDevice.VIODevice, devCtx->MemStats);
-                sg.length = sizeof (BALLOON_STAT) * VIRTIO_BALLOON_S_NR;
+                sg.physAddr = PhyzIOWdfDeviceGetPhysicalAddress(&devCtx->VDevice.PIODevice, devCtx->MemStats);
+                sg.length = sizeof (BALLOON_STAT) * PHYZIO_BALLOON_S_NR;
 
                 if (virtqueue_add_buf(
                     devCtx->StatVirtQueue, &sg, 1, 0, devCtx, NULL, 0) >= 0)
@@ -107,23 +107,23 @@ BalloonInit(
                         "Failed to add buffer to stats queue.\n");
                 }
             }
-            VirtIOWdfSetDriverOK(&devCtx->VDevice);
+            PhyzIOWdfSetDriverOK(&devCtx->VDevice);
         }
         else
         {
             TraceEvents(TRACE_LEVEL_ERROR, DBG_HW_ACCESS,
-                "VirtIOWdfInitQueues failed with %x\n", status);
-            VirtIOWdfSetDriverFailed(&devCtx->VDevice);
+                "PhyzIOWdfInitQueues failed with %x\n", status);
+            PhyzIOWdfSetDriverFailed(&devCtx->VDevice);
         }
     }
     else
     {
         TraceEvents(TRACE_LEVEL_ERROR, DBG_HW_ACCESS,
-            "VirtIOWdfSetDriverFeatures failed with %x\n", status);
-        VirtIOWdfSetDriverFailed(&devCtx->VDevice);
+            "PhyzIOWdfSetDriverFeatures failed with %x\n", status);
+        PhyzIOWdfSetDriverFailed(&devCtx->VDevice);
     }
 
-    // notify the stat queue only after the virtual device has been fully initialized
+    // notify the stat queue only after the phyzual device has been fully initialized
     if (notify_stat_queue)
     {
         virtqueue_kick(devCtx->StatVirtQueue);
@@ -260,10 +260,10 @@ BalloonLeak(
 VOID
 BalloonTellHost(
     IN WDFOBJECT WdfDevice,
-    IN PVIOQUEUE vq
+    IN PPIOQUEUE vq
     )
 {
-    VIO_SG              sg;
+    PIO_SG              sg;
     PDEVICE_CONTEXT     devCtx = GetDeviceContext(WdfDevice);
     NTSTATUS            status;
     LARGE_INTEGER       timeout = {0};
@@ -276,7 +276,7 @@ BalloonTellHost(
         return;
     }
 
-    sg.physAddr = VirtIOWdfDeviceGetPhysicalAddress(&devCtx->VDevice.VIODevice, devCtx->pfns_table);
+    sg.physAddr = PhyzIOWdfDeviceGetPhysicalAddress(&devCtx->VDevice.PIODevice, devCtx->pfns_table);
     sg.length = sizeof(devCtx->pfns_table[0]) * devCtx->num_pfns;
 
     WdfSpinLockAcquire(devCtx->InfDefQueueLock);
@@ -320,7 +320,7 @@ BalloonTerm(
 
     WdfObjectAcquireLock(WdfDevice);
 
-    VirtIOWdfDestroyQueues(&devCtx->VDevice);
+    PhyzIOWdfDestroyQueues(&devCtx->VDevice);
     devCtx->StatVirtQueue = NULL;
 
     WdfObjectReleaseLock(WdfDevice);
@@ -333,14 +333,14 @@ BalloonMemStats(
     IN WDFOBJECT WdfDevice
     )
 {
-    VIO_SG              sg;
+    PIO_SG              sg;
     PDEVICE_CONTEXT     devCtx = GetDeviceContext(WdfDevice);
     bool                do_notify;
 
     TraceEvents(TRACE_LEVEL_INFORMATION, DBG_HW_ACCESS, "--> %s\n", __FUNCTION__);
 
-    sg.physAddr = VirtIOWdfDeviceGetPhysicalAddress(&devCtx->VDevice.VIODevice, devCtx->MemStats);
-    sg.length = sizeof(BALLOON_STAT) * VIRTIO_BALLOON_S_NR;
+    sg.physAddr = PhyzIOWdfDeviceGetPhysicalAddress(&devCtx->VDevice.PIODevice, devCtx->MemStats);
+    sg.length = sizeof(BALLOON_STAT) * PHYZIO_BALLOON_S_NR;
 
     WdfSpinLockAcquire(devCtx->StatQueueLock);
     if (virtqueue_add_buf(devCtx->StatVirtQueue, &sg, 1, 0, devCtx, NULL, 0) < 0)

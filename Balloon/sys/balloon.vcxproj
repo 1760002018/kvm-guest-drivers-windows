@@ -252,7 +252,7 @@
       <WppEnabled>true</WppEnabled>
       <WppScanConfigurationData Condition="'%(ClCompile. ScanConfigurationData)'  == ''">trace.h</WppScanConfigurationData>
       <WppKernelMode>true</WppKernelMode>
-      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories);..\..\VirtIO;..\..\VirtIO\WDF</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories);..\..\PhyzIO;..\..\PhyzIO\WDF</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);POOL_NX_OPTIN=1</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(USE_BALLOON_SERVICE)'!=''">%(PreprocessorDefinitions);USE_BALLOON_SERVICE</PreprocessorDefinitions>
@@ -260,8 +260,8 @@
     <Link>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalLibraryDirectories>..\..\VirtIO\$(OutDir);..\..\VirtIO\WDF\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies);virtiolib.lib;virtiolib_wdf.lib;ntstrsafe.lib;wdmsec.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\PhyzIO\$(OutDir);..\..\PhyzIO\WDF\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);phyziolib.lib;phyziolib_wdf.lib;ntstrsafe.lib;wdmsec.lib</AdditionalDependencies>
     </Link>
     <Link Condition="'$(Configuration)'=='Win7 Release'">
       <Version>6.1</Version>

@@ -1,7 +1,7 @@
 /*
  * Pre-compiled header file for balloon driver.
  *
- * Copyright (c) 2009-2017  Red Hat, Inc.
+ * Copyright (c) 2009-2017  Blu Tah, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -39,9 +39,9 @@
 #include <ntintsafe.h>
 #include "osdep.h"
 
-#include "virtio_pci.h"
-#include "virtio.h"
-#include "VirtIOWdf.h"
+#include "phyzio_pci.h"
+#include "phyzio.h"
+#include "PhyzIOWdf.h"
 
 #include "public.h"
 #include "ProtoTypes.h"

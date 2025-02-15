@@ -25,7 +25,7 @@
 ## Getting Driver Binary Traces using Logman (for sending trace logs to developers) ##
 
 * Copy Tools/Trace subfolder from the root of the source code tree to the target machine
-* Run <driver_name>.bat as administrator (netkvm.bat for example)
+* Run <driver_name>.bat as administrator (netptv.bat for example)
 * Follow instructions
 * Collect the etl file
 

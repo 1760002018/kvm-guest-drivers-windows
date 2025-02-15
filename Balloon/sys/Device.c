@@ -1,10 +1,10 @@
 /*
  * This file contains balloon driver routines
  *
- * Copyright (c) 2009-2017  Red Hat, Inc.
+ * Copyright (c) 2009-2017  Blu Tah, Inc.
  *
  * Author(s):
- *  Vadim Rozenfeld <vrozenfe@redhat.com>
+ *  Vadim Rozenfeld <vrozenfe@blutah.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -264,7 +264,7 @@ BalloonEvtDevicePrepareHardware(
 
     devCtx = GetDeviceContext(Device);
 
-    status = VirtIOWdfInitialize(
+    status = PhyzIOWdfInitialize(
         &devCtx->VDevice,
         Device,
         ResourceListTranslated,
@@ -272,18 +272,18 @@ BalloonEvtDevicePrepareHardware(
         BALLOON_MGMT_POOL_TAG);
     if (!NT_SUCCESS(status))
     {
-        TraceEvents(TRACE_LEVEL_ERROR, DBG_POWER, "VirtIOWdfInitialize failed with %x\n", status);
+        TraceEvents(TRACE_LEVEL_ERROR, DBG_POWER, "PhyzIOWdfInitialize failed with %x\n", status);
         return status;
     }
 
     if (NT_SUCCESS(status))
     {
-        devCtx->MemStats = (PBALLOON_STAT)VirtIOWdfDeviceAllocDmaMemory(&devCtx->VDevice.VIODevice, PAGE_SIZE, BALLOON_MGMT_POOL_TAG);
+        devCtx->MemStats = (PBALLOON_STAT)PhyzIOWdfDeviceAllocDmaMemory(&devCtx->VDevice.PIODevice, PAGE_SIZE, BALLOON_MGMT_POOL_TAG);
     }
 
     if (devCtx->MemStats)
     {
-        RtlFillMemory(devCtx->MemStats, sizeof(BALLOON_STAT) * VIRTIO_BALLOON_S_NR, -1);
+        RtlFillMemory(devCtx->MemStats, sizeof(BALLOON_STAT) * PHYZIO_BALLOON_S_NR, -1);
     }
     else
     {
@@ -294,7 +294,7 @@ BalloonEvtDevicePrepareHardware(
     /* use BALLOON_MGMT_POOL_TAG also for tagging common memory blocks */
     if (NT_SUCCESS(status))
     {
-        devCtx->pfns_table = (PPFN_NUMBER)VirtIOWdfDeviceAllocDmaMemory(&devCtx->VDevice.VIODevice, PAGE_SIZE, BALLOON_MGMT_POOL_TAG);
+        devCtx->pfns_table = (PPFN_NUMBER)PhyzIOWdfDeviceAllocDmaMemory(&devCtx->VDevice.PIODevice, PAGE_SIZE, BALLOON_MGMT_POOL_TAG);
     }
 
     if (devCtx->pfns_table == NULL)
@@ -326,13 +326,13 @@ BalloonEvtDeviceReleaseHardware (
 
     devCtx = GetDeviceContext(Device);
 
-    VirtIOWdfDeviceFreeDmaMemoryByTag(&devCtx->VDevice.VIODevice, BALLOON_MGMT_POOL_TAG);
+    PhyzIOWdfDeviceFreeDmaMemoryByTag(&devCtx->VDevice.PIODevice, BALLOON_MGMT_POOL_TAG);
     devCtx->MemStats = NULL;
     devCtx->pfns_table = NULL;
 
     WdfObjectReleaseLock(Device);
 
-    VirtIOWdfShutdown(&devCtx->VDevice);
+    PhyzIOWdfShutdown(&devCtx->VDevice);
 
     TraceEvents(TRACE_LEVEL_INFORMATION, DBG_PNP, "<-- %s\n", __FUNCTION__);
     return STATUS_SUCCESS;
@@ -413,13 +413,13 @@ BalloonCloseWorkerThread(
 NTSTATUS
 BalloonEvtDeviceD0Entry(
     IN  WDFDEVICE Device,
-    IN  WDF_POWER_DEVICE_STATE PreviousState
+    IN  WDF_POWER_DEVICE_STATE PrepiousState
     )
 {
     NTSTATUS            status = STATUS_SUCCESS;
     PDEVICE_CONTEXT devCtx = GetDeviceContext(Device);
 
-    UNREFERENCED_PARAMETER(PreviousState);
+    UNREFERENCED_PARAMETER(PrepiousState);
     TraceEvents(TRACE_LEVEL_INFORMATION, DBG_INIT, "--> %s\n", __FUNCTION__);
 
     status = BalloonInit(Device);
@@ -467,7 +467,7 @@ BalloonEvtDeviceD0Exit(
 #ifndef USE_BALLOON_SERVICE
    /*
     * interrupts were already disabled (between BalloonEvtDeviceD0ExitPreInterruptsDisabled and this call)
-    * we should flush StatWorkItem before calling BalloonTerm which will delete virtio queues
+    * we should flush StatWorkItem before calling BalloonTerm which will delete phyzio queues
     */
     WdfWorkItemFlush(devCtx->StatWorkItem);
 #endif // !USE_BALLOON_SERVICE
@@ -528,7 +528,7 @@ BalloonInterruptIsr(
     Device = WdfInterruptGetDevice(WdfInterrupt);
     devCtx = GetDeviceContext(Device);
 
-    if (VirtIOWdfGetISRStatus(&devCtx->VDevice) > 0)
+    if (PhyzIOWdfGetISRStatus(&devCtx->VDevice) > 0)
     {
         TraceEvents(TRACE_LEVEL_INFORMATION, DBG_INTERRUPT, "--> %s\n", __FUNCTION__);
         WdfInterruptQueueDpcForIsr( WdfInterrupt );
@@ -681,7 +681,7 @@ BalloonEvtFileClose(
 
     if (devCtx->MemStats)
     {
-        RtlFillMemory(devCtx->MemStats, sizeof(BALLOON_STAT) * VIRTIO_BALLOON_S_NR, -1);
+        RtlFillMemory(devCtx->MemStats, sizeof(BALLOON_STAT) * PHYZIO_BALLOON_S_NR, -1);
     }
 
     if (devCtx->StatVirtQueue && devCtx->MemStats)
@@ -701,7 +701,7 @@ BalloonSetSize(
 {
     PDEVICE_CONTEXT       devCtx = GetDeviceContext(WdfDevice);
     u32 actual = (u32)num;
-    VirtIOWdfDeviceSet(&devCtx->VDevice, FIELD_OFFSET(VIRTIO_BALLOON_CONFIG, actual), &actual, sizeof(actual));
+    PhyzIOWdfDeviceSet(&devCtx->VDevice, FIELD_OFFSET(PHYZIO_BALLOON_CONFIG, actual), &actual, sizeof(actual));
 }
 
 LONGLONG
@@ -712,7 +712,7 @@ BalloonGetSize(
     PDEVICE_CONTEXT       devCtx = GetDeviceContext(WdfDevice);
 
     u32 v;
-    VirtIOWdfDeviceGet(&devCtx->VDevice, FIELD_OFFSET(VIRTIO_BALLOON_CONFIG, num_pages), &v, sizeof(v));
+    PhyzIOWdfDeviceGet(&devCtx->VDevice, FIELD_OFFSET(PHYZIO_BALLOON_CONFIG, num_pages), &v, sizeof(v));
     return (LONGLONG)v - devCtx->num_pages;
 }
 

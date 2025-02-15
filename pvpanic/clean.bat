@@ -13,7 +13,7 @@ for /D %%D IN (objfre_*) do call call :rmdir %%D
 call :rmfiles *.tmh
 popd
 
-pushd "PVPanic Package"
+pushd "PVPanicPackage"
 call :cleandir
 popd
 

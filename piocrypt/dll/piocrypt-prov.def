@@ -1,0 +1,9 @@
+
+LIBRARY "piocrypt-prov"
+
+EXPORTS
+
+	Register
+    Unregister
+
+

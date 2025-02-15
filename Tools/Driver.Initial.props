@@ -10,7 +10,7 @@ Common property definitions used by all drivers:
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="Platform">
 
-  <Target Name="Virtio-Win" BeforeTargets="PrepareForBuild" AfterTargets="DriverBuildNotifications">
+  <Target Name="Phyzio-Win" BeforeTargets="PrepareForBuild" AfterTargets="DriverBuildNotifications">
     <!-- Indicate to users what they are building -->
     <Message Importance="high" Text="Driver.Initial.props: _NT_TARGET_VERSION=$(_NT_TARGET_VERSION) SUBSYSTEM_NATVER=$(SUBSYSTEM_NATVER) mismatch=$(MidlTargetMismatch)" />
   </Target>

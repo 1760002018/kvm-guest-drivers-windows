@@ -1,0 +1,9 @@
+
+LIBRARY "piosocklib"
+
+EXPORTS
+
+	WSPStartup
+	InstallProtocol
+	DeinstallProtocol
+	PiosockCoInstaller

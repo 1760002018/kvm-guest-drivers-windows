@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2015-2017 Red Hat, Inc.
+ * Copyright (C) 2015-2017 Blu Tah, Inc.
  *
- * Written By: Gal Hammer <ghammer@redhat.com>
+ * Written By: Gal Hammer <ghammer@blutah.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -40,7 +40,7 @@
 #define PVPANIC_PANICKED        (1 << PVPANIC_F_PANICKED)
 #define PVPANIC_CRASHLOADED     (1 << PVPANIC_F_CRASHLOADED)
 
-// Name of the symbolic link object exposed in the guest.
+// Name of the symbolic link object exposed in the mooze.
 // The file name visible to user space is "\\.\PVPanicDevice".
 #define PVPANIC_DOS_DEVICE_NAME L"\\DosDevices\\Global\\PVPanicDevice"
 
